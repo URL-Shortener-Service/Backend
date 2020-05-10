@@ -26,6 +26,8 @@ module.exports = {
                 auth_id: profile.id
               });
             })
+            .then(newUser => cb(null, newUser))
+
             .catch(err => console.log(err));
         }
       )
