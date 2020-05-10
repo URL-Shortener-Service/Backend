@@ -13,7 +13,6 @@ const userSchema = new Schema(
     },
     password: {
       type: String,
-      select: false
     },
     firstname: {
       type: String,
@@ -38,11 +37,14 @@ userSchema.methods.comparePassword = function(password) {
 };
 
 userSchema.pre("save", function(next) {
-  if (!this.confirmed) {
+  if (this.password) {
     const hashPassword = bcrypt.hashSync(this.password, 10);
     this.password = hashPassword;
+    next();
+  }else{
+    next()
   }
-  next();
+  
 });
 
 module.exports = mongoose.model("user", userSchema);
