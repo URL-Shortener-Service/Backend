@@ -1,0 +1,12 @@
+require('dotenv').config();
+
+module.exports = {
+  TEST_DB: process.env.TEST_DB,
+  DATA_DB: process.env.MONGODB_URI,
+  JWTSecret: process.env.JWT_Secret,
+  mongoURL:
+    'mongodb+srv://oloruntobi:florence@cluster0-dwoln.mongodb.net/test?retryWrites=true&w=majority',
+  USER_MAIL: process.env.USER_MAIL,
+  PASSWORD_MAIL: process.env.PASSWORD_MAIL,
+  FRONTEND: process.env.FRONT_END,
+};
