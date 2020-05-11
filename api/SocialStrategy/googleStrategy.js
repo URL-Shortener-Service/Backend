@@ -23,7 +23,7 @@ module.exports = {
                 email: profile.emails[0].value,
                 firstname: profile.name.givenName,
                 lastname: profile.name.familyName,
-                auth_id: profile.id
+                authId: profile.id
               });
             })
             .then(newUser => cb(null, newUser))
