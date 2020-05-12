@@ -4,6 +4,7 @@ const helmet = require("helmet");
 const bodyParser = require("body-parser");
 const logger = require("morgan");
 const authRoutes = require("./user");
+const UrlRoutes = require("./url")
 const { authCallbackStrategy } = require('../SocialStrategy/googleStrategy');
 
 const app = express();
@@ -27,6 +28,7 @@ passport.serializeUser((user, done) => {
   
   authCallbackStrategy();
 
-app.use("/", authRoutes);
+//app.use("/", authRoutes);
+app.use("/", UrlRoutes)
 
 module.exports = app;
