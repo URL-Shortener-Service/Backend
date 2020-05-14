@@ -79,4 +79,37 @@ module.exports = {
       return next({ message: "Error sending mail tryagain" });
     }
   },
+
+  async resetPassword(req, res, next) {
+    const { token } = req.query;
+    try {
+      const user = await models.User.findOne({
+        reset_password_token: token
+      }).exec();
+      if (!user) {
+        return response.errorHelper(
+          res,
+          401,
+          "Invalid token to reset password"
+        );
+      }
+      const savedDate = user.reset_password_expires
+      const date = Date.now() - savedDate;
+     
+      if (date > 0) {
+        return response.errorHelper(res, 400, "Password reset have expired");
+      }
+      const hash = await bcrypt.hash(req.body.password, 14);
+     await models.User.findOneAndUpdate(
+        // eslint-disable-next-line no-underscore-dangle
+        { email: user.email },
+        {
+          password: hash,
+          reset_password_token: ""
+        }, {new: true}
+      ).exec();
+      return response.successResponse(res, 200, "Password reset was succesful");
+    } catch (error) {
+      return next({ message: error.message });
+    }},
 };
