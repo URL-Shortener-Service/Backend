@@ -50,5 +50,33 @@ module.exports = {
     } catch (error) {
       return next({ message: "Error updating user profile" });
     }
-  }
+  },
+
+  async sendPasswordMail(req, res, next) {
+    const token = await crypto.randomBytes(20).toString("hex");
+    const expiringDate = Date.now() + 3600000;
+    try {
+     mail.passwordResetMail(
+        `${secret.FRONTEND}/resetpassword`,
+        token,
+        req.userEmail.email,
+        req.userEmail.name
+      );
+     await models.User.findOneAndUpdate(
+        { email: req.userEmail.email },
+        {
+          reset_password_token: token,
+          reset_password_expires: expiringDate
+        },
+        { new: true }
+      );
+      return response.successResponse(
+        res,
+        200,
+        `Email sent to ${req.userEmail.email}`
+      );
+    } catch (error) {
+      return next({ message: "Error sending mail tryagain" });
+    }
+  },
 };
